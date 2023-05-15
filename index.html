@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;500&display=swap');
+
+        #hours, #minutes, #seconds {
+            transition: transform 1s;
+            transform-origin: 350px 350px;
+        }
+
+        body { 
+            background-color: rgb(218, 221, 225);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        text {
+            fill: white;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 30px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            transition: transform 1s linear;
+        }
+
+        #currentTime {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            let now = new Date();
+
+            let seconds = now.getSeconds();
+            let minutes = now.getMinutes();
+            let hours = now.getHours();
+
+            let secondAngle = seconds * 6;
+            let minuteAngle = minutes * 6 + seconds * 0.1;
+            let hourAngle = (hours % 12) * 30 + minutes * 0.5;
+
+            setInterval(() => {
+                secondAngle += 6;
+                minuteAngle += 0.1;
+                hourAngle += 1/120;
+
+                seconds = (seconds + 1) % 60;
+                if (seconds === 0) {
+                    minutes = (minutes + 1) % 60;
+                    if (minutes === 0) {
+                        hours = (hours + 1) % 24;
+                    }
+                }
+
+                if (secondAngle >= 360) {
+                    document.getElementById("seconds").style.transition = 'none';
+                    document.getElementById("secondsText").style.transition = 'none';
+                    secondAngle = 0;
+                } else {
+                    document.getElementById("seconds").style.transition = 'transform 1s';
+                    document.getElementById("secondsText").style.transition = 'transform 1s linear';
+                }
+
+                if (minuteAngle >= 360) {
+                    document.getElementById("minutes").style.transition = 'none';
+                    document.getElementById("minutesText").style.transition = 'none';
+                    minuteAngle = 0;
+                } else {
+                    document.getElementById("minutes").style.transition = 'transform 1s';
+                    document.getElementById("minutesText").style.transition = 'transform 1s linear';
+                }
+
+                if (hourAngle >= 360) {
+                    document.getElementById("hours").style.transition = 'none';
+                    document.getElementById("hoursText").style.transition = 'none';
+                    hourAngle = 0;
+                } else {
+                    document.getElementById("hours").style.transition = 'transform 1s';
+                    document.getElementById("hoursText").style.transition = 'transform 1s linear';
+                }
+
+                document.getElementById("seconds").style.transform = `rotate(${secondAngle}deg)`;
+                document.getElementById("minutes").style.transform = `rotate(${minuteAngle}deg)`;
+                document.getElementById("hours").style.transform = `rotate(${hourAngle}deg)`;
+
+                document.getElementById("secondsText").style.transform = `rotate(${-secondAngle}deg)`;
+                document.getElementById("minutesText").style.transform = `rotate(${-minuteAngle}deg)`;
+                document.getElementById("hoursText").style.transform = `rotate(${-hourAngle}deg)`;
+
+                document.getElementById("secondsText").textContent = ("0" + seconds).slice(-2);
+                document.getElementById("minutesText").textContent = ("0" + minutes).slice(-2);
+                document.getElementById("hoursText").textContent = ("0" + hours).slice(-2);
+
+                document.getElementById("currentTime").textContent = `${("0" + hours).slice(-2)}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
+                }, 1000);
+                };
+                </script>
+                <title>Clickist</title>
+                </head>
+                <body>
+                <svg id="mySVG" width="700" height="700" viewBox="-50 -50 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="hours">
+                <circle cx="350" cy="350" r="350" stroke="#dfe2e8" stroke-width="110" />
+                <circle cx="350" cy="0" r="50" fill="black" />
+                <text id="hoursText" x="350" y="0" style="transform-origin: 350px 0;">00</text>
+                </g>
+                <g id="minutes">
+                <circle cx="350" cy="350" r="225" stroke="#dfe2e8" stroke-width="110"/>
+                <circle cx="350" cy="125" r="50" fill="black"/>
+                <text id="minutesText" x="350" y="130" style="transform-origin: 350px 130px;">00</text>
+                </g>
+                <g id="seconds">
+                <circle cx="350" cy="350" r="100" stroke="#dfe2e8" stroke-width="110"/>
+                <circle cx="350" cy="250" r="50" fill="black"/>
+                <text id="secondsText" x="350" y="255" style="transform-origin: 350px 255px;">00</text>
+                </g>
+                </svg>
+                <p id="currentTime"></p>
+                </body>
+                </html>
+
